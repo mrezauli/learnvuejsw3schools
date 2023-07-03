@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue is a JavaScript Framework</title>
+
+    <style>
+        .pinkBG {
+            background-color: pink;
+        }
+
+        .impClass {
+            background-color: tomato;
+        }
+
+        .myClass {
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <br />
+        {{'Random number: ' + Math.ceil(Math.random()*6) }}
+        <div :class="vueClass">{{ message }}</div>
+        <img :src="url" height="300">
+        <div :style="{ fontSize: size + 'px' }">
+            Text example
+        </div>
+        <div :style="{ backgroundColor: 'hsl('+bgVal+',80%,80%)' }">
+            Notice the background color on this div tag.
+        </div>
+        <div :style="{ backgroundColor: isImportant ? 'coral' : 'gray' }">
+            Conditional background color
+        </div>
+        <div :class="className">
+            Importance visualized by background color
+        </div>
+        <div :class="{ myClass: true }">
+            Importance visualized by background color
+        </div>
+        <div :class="{ myClass: isImportant }">
+            Importance visualized by background color
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    message: "Hello World!",
+                    vueClass: "pinkBG",
+                    url: "/assets/pexels-adely-17151942.jpg",
+                    size: '48',
+                    bgVal: 180,
+                    isImportant: true,
+                    className: 'impClass'
+                };
+            },
+        });
+
+        app.mount("#app");
+    </script>
+</body>
+
+</html>

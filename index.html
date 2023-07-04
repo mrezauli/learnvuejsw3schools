@@ -27,7 +27,7 @@
         <br />
         {{'Random number: ' + Math.ceil(Math.random()*6) }}
         <div :class="vueClass">{{ message }}</div>
-        <img :src="url" height="300">
+        <img :src="url" height="100">
         <div :style="{ fontSize: size + 'px' }">
             Text example
         </div>
@@ -46,7 +46,47 @@
         <div :class="{ myClass: isImportant }">
             Importance visualized by background color
         </div>
+        <p v-if="typewriterCount>3">
+            In stock
+        </p>
+
+        <p v-else-if="typewriterCount>0">
+            Very few left!
+        </p>
+
+        <p v-else>
+            Not in stock
+        </p>
+
+        <div v-if="text.includes('pizza')">
+            <p>The text includes the word 'pizza'</p>
+            <img :src="url" height="100">
+        </div>
+
+        <div v-else-if="text.includes('burrito')">
+            <p>The text includes the word 'burrito', but not 'pizza'</p>
+            <img :src="url" height="100">
+        </div>
+
+        <p v-else>The words 'pizza' or 'burrito' are not found in the text</p>
+        <div v-show="showDiv">This div tag can be hidden</div>
+        <div v-show="showDiv">Div tag with v-show</div>
+        <div v-if="showDiv">Div tag with v-if</div>
+
+        <ol>
+            <li v-for="x in manyFoods">{{ x }}</li>
+        </ol>
+        <div>
+            <img v-for="x in manyFoodsImage" v-bind:src="x" height="100">
+        </div>
+        <div>
+            <figure v-for="x in manyFoodsImageObject">
+                <img v-bind:src="x.url" height="100">
+                <figcaption>{{ x.name }}</figcaption>
+            </figure>
+        </div>
     </div>
+
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
@@ -59,7 +99,37 @@
                     size: '48',
                     bgVal: 180,
                     isImportant: true,
-                    className: 'impClass'
+                    className: 'impClass',
+                    typewriterCount: 3,
+                    text: 'I like burrito, pizza, Thai beef salad, pho soup and tagine.',
+                    showDiv: false,
+                    manyFoods: [
+                        'Burrito',
+                        'Salad',
+                        'Cake',
+                        'Soup',
+                        'Fish',
+                        'Pizza',
+                        'Rice'
+                    ],
+                    manyFoodsImage: [
+                        '/assets/img_burrito.svg',
+                        '/assets/img_salad.svg',
+                        '/assets/img_cake.svg',
+                        '/assets/img_soup.svg',
+                        '/assets/img_fish.svg',
+                        '/assets/img_pizza.svg',
+                        '/assets/img_rice.svg'
+                    ],
+                    manyFoodsImageObject: [
+                        { name: 'Burrito', url: '/assets/img_burrito.svg' },
+                        { name: 'Salad', url: '/assets/img_salad.svg' },
+                        { name: 'Cake', url: '/assets/img_cake.svg' },
+                        { name: 'Soup', url: '/assets/img_soup.svg' },
+                        { name: 'Fish', url: '/assets/img_fish.svg' },
+                        { name: 'Pizza', url: '/assets/img_pizza.svg' },
+                        { name: 'Rice', url: '/assets/img_rice.svg' }
+                    ]
                 };
             },
         });

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue is a JavaScript Framework</title>
+
+    <style>
+        .pinkBG {
+            background-color: pink;
+        }
+
+        .impClass {
+            background-color: tomato;
+        }
+
+        .myClass {
+            background-color: green;
+        }
+
+        #lightDiv {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        #lightDiv>img {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #lightDiv>div {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background-color: yellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <br />
+        {{'Random number: ' + Math.ceil(Math.random()*6) }}
+        <div :class="vueClass">{{ message }}</div>
+        <img :src="url" height="100">
+        <div :style="{ fontSize: size + 'px' }">
+            Text example
+        </div>
+        <div :style="{ backgroundColor: 'hsl('+bgVal+',80%,80%)' }">
+            Notice the background color on this div tag.
+        </div>
+        <div :style="{ backgroundColor: isImportant ? 'coral' : 'gray' }">
+            Conditional background color
+        </div>
+        <div :class="className">
+            Importance visualized by background color
+        </div>
+        <div :class="{ myClass: true }">
+            Importance visualized by background color
+        </div>
+        <div :class="{ myClass: isImportant }">
+            Importance visualized by background color
+        </div>
+        <p v-if="typewriterCount>3">
+            In stock
+        </p>
+
+        <p v-else-if="typewriterCount>0">
+            Very few left!
+        </p>
+
+        <p v-else>
+            Not in stock
+        </p>
+
+        <div v-if="text.includes('pizza')">
+            <p>The text includes the word 'pizza'</p>
+            <img :src="url" height="100">
+        </div>
+
+        <div v-else-if="text.includes('burrito')">
+            <p>The text includes the word 'burrito', but not 'pizza'</p>
+            <img :src="url" height="100">
+        </div>
+
+        <p v-else>The words 'pizza' or 'burrito' are not found in the text</p>
+        <div v-show="showDiv">This div tag can be hidden</div>
+        <div v-show="showDiv">Div tag with v-show</div>
+        <div v-if="showDiv">Div tag with v-if</div>
+
+        <ol>
+            <li v-for="x in manyFoods">{{ x }}</li>
+        </ol>
+        <div>
+            <img v-for="x in manyFoodsImage" :src="x" height="100">
+        </div>
+        <div>
+            <figure v-for="x in manyFoodsImageObject">
+                <img :src="x.url" height="100">
+                <figcaption>{{ x.name }}</figcaption>
+            </figure>
+        </div>
+        <div>
+            <p v-for="(x, index) in manyFoods">
+                {{ index }} - {{ x }} <br>
+            </p>
+        </div>
+        <div>
+            <p v-for="(x, index) in manyFoodsImageObject">
+                {{ index }}: "{{ x.name }}", url: "{{ x.url }}" <br>
+            </p>
+        </div>
+        <div>
+            <p>{{ "Moose count: " + count }}</p>
+            <button @:click="count++">Count moose</button>
+        </div>
+        <div id="lightDiv">
+            <div v-show="lightOn"></div>
+            <img src="/assets/img_lightBulb.svg">
+        </div>
+        <button @:click=" lightOn =! lightOn ">Switch light</button>
+        <br />
+        <input type="text" @:input="inpCount++" placeholder="Start writing..">
+        <p>{{ 'Input events occured: '+inpCount }}</p>
+
+        <div style="width: 200px; height: 80px;" @:mousemove=" colorVal = Math.floor(Math.random()*360) "
+            :style=" {backgroundColor: 'hsl('+colorVal+',60%,60%)'} "></div>
+        <p><span>backgroundColor: hsl(<strong>{{ colorVal }}</strong>, 80%, 80%)</span></p>
+        <p>To understand how to set a color in CSS with 'hsl()' see <a href="/css/css_colors_hsl.asp"
+                target="_blank">our page about this</a>.</p>
+
+        <div>
+            <img height="100" :src="imgUrl">
+            <ol>
+                <li v-for="food in manyFoodsImageObject" @:click="imgUrl = food.url">
+                    {{ food.name }}
+                </li>
+            </ol>
+        </div>
+        <div style="width: 200px; height: 80px; background-color: tomato" @:click="changeText">
+            {{ text }}
+        </div>
+        <br />
+        <div :style=" {backgroundColor:'hsl('+xPos+',80%,80%)'}" @:mousemove="mousePos">
+            <span>xPos: {{ xPos }}</span>
+            <br>
+            <span>yPos: {{ yPos }}</span>
+        </div>
+
+        <textarea @:input="writeText" placeholder="Start writing..."></textarea>
+        <br />
+        <span>{{ text }}</span>
+
+        <p>{{ "Moose count: " + count }}</p>
+        <button @:click="addMoose(+1)">+1</button>
+        <button @:click="addMoose(+5)">+5</button>
+        <button @:click="addMoose(-1)">-1</button>
+
+        <div>
+            <img :src="url" id="tiger" @:click="myMethod($event, 'Hello')" width="100" height="100">
+            <p>Here is the message sent with the method, and the id of the img tag:</p>
+            <p id="green">{{ msgAndId }}</p>
+        </div>
+
+        <div id="tigers">
+            <img :src="url" width="100" height="100">
+            <button @:click="addAnimal($event,1)">+1</button>
+            <button @:click="addAnimal($event,5)">+5</button>
+            <button @:click="addAnimal($event,-1)">-1</button>
+        </div>
+        <div id="moose">
+            <img :src="url" width="100" height="100">
+            <button @:click="addAnimal($event,1)">+1</button>
+            <button @:click="addAnimal($event,5)">+5</button>
+            <button @:click="addAnimal($event,-1)">-1</button>
+        </div>
+        <div id="kangaroos">
+            <img :src="url" width="100" height="100">
+            <button @:click="addAnimal($event,1)">+1</button>
+            <button @:click="addAnimal($event,5)">+5</button>
+            <button @:click="addAnimal($event,-1)">-1</button>
+        </div>
+        <ul>
+            <li>Tigers: {{ tigers }}</li>
+            <li>Moose: {{ moose }}</li>
+            <li>Kangaroos: {{ kangaroos }}</li>
+        </ul>
+
+        <button @:click.once="createAlert">Create Alert</button>
+
+        <input type="text" @:keydown="getKey">
+        <p>{{ keyValue }}</p>
+
+        <textarea cols="20" rows="3" @:keydown.s="createAlert" placeholder="Start writing.."></textarea>
+        <textarea @:keydown.ctrl.s="createAlert"></textarea>
+
+        <div @:click.right="changeColor" :style="{backgroundColor:'hsl('+bgColor+',80%,80%)'}">
+            <p>Press right mouse button here.</p>
+        </div>
+
+        <div @:click.right.ctrl="changeColor" :style="{backgroundColor:'hsl('+bgColor+',80%,80%)'}">
+            <p>Press right mouse button here.</p>
+        </div>
+
+        <div @:click.right.prevent="changeColor" :style="{backgroundColor:'hsl('+bgColor+',80%,80%)'}">
+            <p>Press right mouse button here.</p>
+        </div>
+
+        <div>
+            <img width="100" @:click.right.ctrl="changeImg" :src="imgUrl" />
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    message: "Hello World!",
+                    vueClass: "pinkBG",
+                    url: "/assets/pexels-adely-17151942.jpg",
+                    size: '48',
+                    bgVal: 180,
+                    isImportant: true,
+                    className: 'impClass',
+                    typewriterCount: 3,
+                    text: 'I like burrito, pizza, Thai beef salad, pho soup and tagine.',
+                    showDiv: false,
+                    manyFoods: [
+                        'Burrito',
+                        'Salad',
+                        'Cake',
+                        'Soup',
+                        'Fish',
+                        'Pizza',
+                        'Rice'
+                    ],
+                    manyFoodsImage: [
+                        '/assets/img_burrito.svg',
+                        '/assets/img_salad.svg',
+                        '/assets/img_cake.svg',
+                        '/assets/img_soup.svg',
+                        '/assets/img_fish.svg',
+                        '/assets/img_pizza.svg',
+                        '/assets/img_rice.svg'
+                    ],
+                    manyFoodsImageObject: [
+                        { name: 'Burrito', url: '/assets/img_burrito.svg' },
+                        { name: 'Salad', url: '/assets/img_salad.svg' },
+                        { name: 'Cake', url: '/assets/img_cake.svg' },
+                        { name: 'Soup', url: '/assets/img_soup.svg' },
+                        { name: 'Fish', url: '/assets/img_fish.svg' },
+                        { name: 'Pizza', url: '/assets/img_pizza.svg' },
+                        { name: 'Rice', url: '/assets/img_rice.svg' }
+                    ],
+                    count: 0,
+                    lightOn: false,
+                    inpCount: 0,
+                    colorVal: 50,
+                    imgUrl: '/assets/img_pizza.svg',
+                    text: '',
+                    xPos: 0,
+                    yPos: 0,
+                    msgAndId: '',
+                    tigers: 0,
+                    moose: 0,
+                    kangaroos: 0,
+                    keyValue: '',
+                    bgColor: 0,
+                    imgUrlIndex: 0,
+                    imgages: [
+                        '/assets/img_rice.svg',
+                        '/assets/img_fish.svg',
+                        '/assets/img_soup.svg'
+                    ],
+                };
+            },
+            methods: {
+                changeText() {
+                    this.text = 'Hello World!'
+                },
+                mousePos(event) {
+                    this.xPos = event.offsetX
+                    this.yPos = event.offsetY
+                },
+                writeText(event) {
+                    this.text = event.target.value
+                },
+                addMoose(number) {
+                    this.count += number
+                },
+                myMethod(e, msg) {
+                    this.msgAndId = msg + ', '
+                    this.msgAndId += e.target.id
+                },
+                addAnimal(e, number) {
+                    if (e.target.parentElement.id === "tigers") {
+                        this.tigers += number;
+                    }
+                    else if (e.target.parentElement.id === "moose") {
+                        this.moose += number;
+                    }
+                    else {
+                        this.kangaroos += number;
+                    }
+                },
+                createAlert() {
+                    alert("Alert created from button click")
+                },
+                getKey(evt) {
+                    this.keyValue = evt.key
+                    console.log(evt.key)
+                },
+                changeColor() {
+                    this.bgColor += 50
+                },
+                changeImg() {
+                    this.imgUrlIndex++
+                    if (this.imgUrlIndex >= 3) {
+                        this.imgUrlIndex = 0
+                    }
+                    this.imgUrl = this.images[this.imgUrlIndex]
+                }
+            }
+        });
+
+        app.mount("#app");
+    </script>
+</body>
+
+</html>

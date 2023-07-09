@@ -2,253 +2,227 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue is a JavaScript Framework</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Forms</title>
 
     <style>
-        .pinkBG {
-            background-color: pink;
+        #ulFound li {
+            text-decoration: line-through;
+            background-color: rgb(230, 230, 230);
+        }
+
+        .selClass {
+            border: solid brown 4px;
+            background-color: lightpink;
         }
 
         .impClass {
-            background-color: tomato;
+            font-weight: bolder;
         }
 
-        .myClass {
-            background-color: green;
-        }
-
-        #lightDiv {
-            position: relative;
-            width: 150px;
-            height: 150px;
-        }
-
-        #lightDiv>img {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        #lightDiv>div {
-            position: absolute;
-            top: 10%;
-            left: 10%;
-            width: 80%;
-            height: 80%;
-            border-radius: 50%;
-            background-color: yellow;
+        .yelClass {
+            background-color: rgb(255, 255, 136);
         }
     </style>
 </head>
 
 <body>
     <div id="app">
-        {{ message }}
-        <br />
-        {{'Random number: ' + Math.ceil(Math.random()*6) }}
-        <div :class="vueClass">{{ message }}</div>
-        <img :src="url" height="100">
-        <div :style="{ fontSize: size + 'px' }">
-            Text example
-        </div>
-        <div :style="{ backgroundColor: 'hsl('+bgVal+',80%,80%)' }">
-            Notice the background color on this div tag.
-        </div>
-        <div :style="{ backgroundColor: isImportant ? 'coral' : 'gray' }">
-            Conditional background color
-        </div>
-        <div :class="className">
-            Importance visualized by background color
-        </div>
-        <div :class="{ myClass: true }">
-            Importance visualized by background color
-        </div>
-        <div :class="{ myClass: isImportant }">
-            Importance visualized by background color
-        </div>
-        <p v-if="typewriterCount>3">
-            In stock
-        </p>
+        <form @:submit.prevent="addItem">
+            <p>
+                What do you need?
+                <input type="text" required placeholder="item name" v-model="itemName">
+            </p>
+            <p>
+                How many?
+                <input type="number" placeholder="number of items" v-model="itemNumber">
+            </p>
+            <p>
+                Important item?
+                <label>
+                    <input type="checkbox" v-model="important">
+                </label>
+            </p>
+            <button type="submit">Add item</button>
+        </form>
 
-        <p v-else-if="typewriterCount>0">
-            Very few left!
-        </p>
+        <div>
+            <p>Shopping list:</p>
+            <ul id="ulToFind">
+                <li v-for="item in shoppingList" @:click="item.found=!item.found" v-show="!item.found">
+                    {{ item.name }}, {{ item.number}}, {{ item.important}}, {{ item.found}}
+                </li>
+            </ul>
+            <ul id="ulFound">
+                <li v-for="item in shoppingList" @:click="item.found=!item.found" v-show="item.found">
+                    {{ item.name }}, {{ item.number}}, {{ item.important}}, {{ item.found}}
+                </li>
+            </ul>
+        </div>
+        <div>
+            <input type="text" v-model="inpText">
+            <p>inpText value: "{{ inpText }}" </p>
+        </div>
 
-        <p v-else>
-            Not in stock
+        <form @:submit.prevent="addItemToOrder">
+            <p>
+            <h4>Order here:</h4>
+            <label>
+                <input type="radio" required value="Dinner" v-model="itemType" name="rbgType">Dinner
+            </label><br>
+            <label>
+                <input type="radio" required value="Drink" v-model="itemType" name="rbgType">Drink
+            </label><br>
+            <label>
+                <input type="radio" required value="Dessert" v-model="itemType" name="rbgType">Dessert
+            </label>
+            </p>
+            <p v-show="itemType">
+                <label>
+                    <select required v-model="itemName" @:change="newUrl">
+                        <option value="" selected disabled>Select item</option>
+                        <option v-for="item in preDefItems" :value="item.name" v-show="item.type===itemType"
+                            :data-url="item.imgUrl">
+                            {{ item.name }}
+                        </option>
+                    </select>
+                </label>
+            </p>
+            <img width="100" :src="itemUrl">
+            <p v-show="itemName">
+                <input type="number" placeholder="How many?" v-model="itemNumber" required>
+            </p>
+            <button type="submit">Order</button>
+        </form>
+        <br>
+        <hr>
+
+        <div>
+            <h4>Your order:</h4>
+            <ul id="ulToFind">
+                <li v-for="item in order">
+                    {{ item.name }}, {{ item.number}} <img width="100" :src="item.url">
+                </li>
+            </ul>
+
+            </ul>
+        </div>
+
+        <p>
+            <input type="range" min="0" max="1" step="0.1" v-model="opacityVal"> {{opacityVal}} (opacity value)
         </p>
         <div>
-            </d>
-
-            <div v-if="text.includes('pizza')">
-                <p>The text includes the word 'pizza'</p>
-                <img :src="url" height="100">
-            </div>
-
-            <div v-else-if="text.includes('burrito')">
-                <p>The text includes the word 'burrito', but not 'pizza'</p>
-                <img :src="url" height="100">
-            </div>
-
-            <p v-else>The words 'pizza' or 'burrito' are not found in the text</p>
-            <div v-show="showDiv">This div tag can be hidden</div>
-            <div v-show="showDiv">Div tag with v-show</div>
-            <div v-if="showDiv">Div tag with v-if</div>
-
-            <ol>
-                <li v-for="x in manyFoods">{{ x }}</li>
-            </ol>
-            <div>
-                <img v-for="x in manyFoodsImage" v-bind:src="x" height="100">
-            </div>
-            <div>
-                <figure v-for="x in manyFoodsImageObject">
-                    <img v-bind:src="x.url" height="100">
-                    <figcaption>{{ x.name }}</figcaption>
-                </figure>
-            </div>
-            <div>
-                <p v-for="(x, index) in manyFoods">
-                    {{ index }} - {{ x }} <br>
-                </p>
-            </div>
-            <div>
-                <p v-for="(x, index) in manyFoodsImageObject">
-                    {{ index }}: "{{ x.name }}", url: "{{ x.url }}" <br>
-                </p>
-            </div>
-            <div>
-                <p>{{ "Moose count: " + count }}</p>
-                <button @:click="count++">Count moose</button>
-            </div>
-            <div id="lightDiv">
-                <div v-show="lightOn"></div>
-                <img src="/assets/img_lightBulb.svg">
-            </div>
-            <button @:click=" lightOn =! lightOn ">Switch light</button>
-            <br />
-            <input type="text" @:input="inpCount++" placeholder="Start writing..">
-            <p>{{ 'Input events occured: '+inpCount }}</p>
-
-            <div style="width: 200px; height: 80px;" @:mousemove=" colorVal = Math.floor(Math.random()*360) "
-                v-bind:style=" {backgroundColor: 'hsl('+colorVal+',60%,60%)'} "></div>
-            <p><span>backgroundColor: hsl(<strong>{{ colorVal }}</strong>, 80%, 80%)</span></p>
-            <p>To understand how to set a color in CSS with 'hsl()' see <a href="/css/css_colors_hsl.asp"
-                    target="_blank">our page about this</a>.</p>
-
-            <div>
-                <img height="100" v-bind:src="imgUrl">
-                <ol>
-                    <li v-for="food in manyFoodsImageObject" @:click="imgUrl = food.url">
-                        {{ food.name }}
-                    </li>
-                </ol>
-            </div>
-            <div style="width: 200px; height: 80px; background-color: tomato" v-on:click="changeText">
-                {{ text }}
-            </div>
-            <br />
-            <div v-bind:style=" {backgroundColor:'hsl('+xPos+',80%,80%)'}" v-on:mousemove="mousePos">
-                <span>xPos: {{ xPos }}</span>
-                <br>
-                <span>yPos: {{ yPos }}</span>
-            </div>
-
-            <textarea v-on:input="writeText" placeholder="Start writing..."></textarea>
-            <br />
-            <span>{{ text }}</span>
-
-            <p>{{ "Moose count: " + count }}</p>
-            <button v-on:click="addMoose(+1)">+1</button>
-            <button v-on:click="addMoose(+5)">+5</button>
-            <button v-on:click="addMoose(-1)">-1</button>
-
-            <div>
-                <img :src="url" id="tiger" v-on:click="myMethod($event,'Hello')" width="100" height="100">
-                <p>Here is the message sent with the method, and the id of the img tag:</p>
-                <p id="green">"{{ msgAndId }}"</p>
+            <div id="onTop" v-bind:style="{ backgroundColor: 'rgba(99,0,89,'+opacityVal+')' }">
+                Drag the range input to change opacity here.
             </div>
         </div>
 
+        <div v-for="(img, index) in images">
+            <img width="100" v-bind:src="img.url" v-on:click="select(index)" v-bind:class="{selClass: img.sel}">
+        </div>
 
-        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-        <script>
-            const app = Vue.createApp({
-                data() {
-                    return {
-                        message: "Hello World!",
-                        vueClass: "pinkBG",
-                        url: "/assets/pexels-adely-17151942.jpg",
-                        size: '48',
-                        bgVal: 180,
-                        isImportant: true,
-                        className: 'impClass',
-                        typewriterCount: 3,
-                        text: 'I like burrito, pizza, Thai beef salad, pho soup and tagine.',
-                        showDiv: false,
-                        manyFoods: [
-                            'Burrito',
-                            'Salad',
-                            'Cake',
-                            'Soup',
-                            'Fish',
-                            'Pizza',
-                            'Rice'
-                        ],
-                        manyFoodsImage: [
-                            '/assets/img_burrito.svg',
-                            '/assets/img_salad.svg',
-                            '/assets/img_cake.svg',
-                            '/assets/img_soup.svg',
-                            '/assets/img_fish.svg',
-                            '/assets/img_pizza.svg',
-                            '/assets/img_rice.svg'
-                        ],
-                        manyFoodsImageObject: [
-                            { name: 'Burrito', url: '/assets/img_burrito.svg' },
-                            { name: 'Salad', url: '/assets/img_salad.svg' },
-                            { name: 'Cake', url: '/assets/img_cake.svg' },
-                            { name: 'Soup', url: '/assets/img_soup.svg' },
-                            { name: 'Fish', url: '/assets/img_fish.svg' },
-                            { name: 'Pizza', url: '/assets/img_pizza.svg' },
-                            { name: 'Rice', url: '/assets/img_rice.svg' }
-                        ],
-                        count: 0,
-                        lightOn: false,
-                        inpCount: 0,
-                        colorVal: 50,
-                        imgUrl: '/assets/img_pizza.svg',
-                        text: '',
-                        xPos: 0,
-                        yPos: 0,
-                        msgAndId: ''
-                    };
-                },
-                methods: {
-                    changeText() {
-                        this.text = 'Hello World!'
-                    },
-                    mousePos(event) {
-                        this.xPos = event.offsetX
-                        this.yPos = event.offsetY
-                    },
-                    writeText(event) {
-                        this.text = event.target.value
-                    },
-                    addMoose(number) {
-                        this.count += number
-                    },
-                    myMethod(e, msg) {
-                        this.msgAndId = msg + ', '
-                        this.msgAndId += e.target.id
-                    }
+        <div class="impClass" v-bind:class="{ yelClass: isYellow }">
+            This div belongs to both 'impClass' and 'yelClass'.
+        </div>
+        <br />
+        <div v-bind:class="{ yelClass: isYellow, impClass: isImportant }">
+            This can belong to both 'impClass' and
+            'yelClass' depending an the 'isYellow' and 'isImportant' Vue properties.
+        </div>
+
+        <div v-bind:style="{ backgroundColor: 'lightpink', 'font-weight': 'bolder' }">
+            This div tag has pink background and bold text.
+        </div>
+
+        <div v-bind:class="[{ impClass: isImportant }, 'yelClass' ]">
+            This div tag belongs to one or two classes depending on the isImportant property.
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    itemName: null,
+                    itemNumber: null,
+                    itemImportant: false,
+                    shoppingList: [
+                        { name: 'Tomatoes', number: 5, important: false, found: false },
+                        { name: 'Bread', number: 1, important: false, found: false },
+                        { name: 'Soap', number: 1, important: true, found: true }
+                    ],
+                    inpText: 'Initial text',
+                    itemType: '',
+                    itemUrl: '',
+                    preDefItems: [
+                        { name: 'Burrito', type: 'Dinner', imgUrl: '/assets/img_burrito.svg' },
+                        { name: 'Pizza', type: 'Dinner', imgUrl: '/assets/img_pizza.svg' },
+                        { name: 'Pho Soup', type: 'Dinner', imgUrl: '/assets/img_soup.svg' },
+                        { name: 'Spaghetti', type: 'Dinner', imgUrl: '/assets/img_spaghetti.svg' },
+                        { name: 'Fish', type: 'Dinner', imgUrl: '/assets/img_fish.svg' },
+                        { name: 'Cake', type: 'Dessert', imgUrl: '/assets/img_cake.svg' },
+                        { name: 'Rice', type: 'Dinner', imgUrl: '/assets/img_rice.svg' },
+                        { name: 'Salad', type: 'Dinner', imgUrl: '/assets/img_salad.svg' },
+                        { name: 'Coke', type: 'Drink', imgUrl: '/assets/img_soda.svg' },
+                        { name: 'Green Soda', type: 'Drink', imgUrl: '/assets/img_greenSoda.svg' },
+                        { name: 'Doughnut', type: 'Dessert', imgUrl: '/assets/img_doughnut.svg' },
+                        { name: 'Ice Cream', type: 'Dessert', imgUrl: '/assets/img_iceCream.svg' },
+                        { name: 'Lemonade', type: 'Drink', imgUrl: '/assets/img_lemonade.svg' },
+                        { name: 'Pancakes', type: 'Dessert', imgUrl: '/assets/img_pancakes.svg' },
+                        { name: 'Water', type: 'Drink', imgUrl: '/assets/img_water.svg' }
+                    ],
+                    order: [],
+                    opacityVal: 0.5,
+                    images: [
+                        { url: '/assets/img_burrito.svg', sel: false },
+                        { url: '/assets/img_salad.svg', sel: false },
+                        { url: '/assets/img_cake.svg', sel: false },
+                        { url: '/assets/img_soup.svg', sel: false },
+                        { url: '/assets/img_fish.svg', sel: false },
+                        { url: '/assets/img_pizza.svg', sel: false },
+                        { url: '/assets/img_rice.svg', sel: false }
+                    ],
+                    isYellow: true,
+                    isImportant: true
                 }
-            });
-
-            app.mount("#app");
-        </script>
+            },
+            methods: {
+                addItem() {
+                    let item = {
+                        name: this.itemName,
+                        number: this.itemNumber,
+                        important: this.itemImportant,
+                        found: false
+                    }
+                    this.shoppingList.push(item)
+                    this.itemName = null
+                    this.itemNumber = null
+                    this.itemImportant = false
+                },
+                addItemToOrder() {
+                    let item = {
+                        name: this.itemName,
+                        number: this.itemNumber,
+                        url: this.itemUrl
+                    }
+                    this.order.push(item)
+                    this.itemType = ''
+                    this.itemName = ''
+                    this.itemNumber = null
+                    this.itemUrl = ''
+                },
+                newUrl(e) {
+                    this.itemUrl = e.target.options[e.target.selectedIndex].getAttribute("data-url")
+                },
+                select(number) {
+                    this.images[number].sel = !this.images[number].sel
+                }
+            }
+        })
+        app.mount('#app')
+    </script>
 </body>
 
 </html>

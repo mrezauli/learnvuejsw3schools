@@ -24,6 +24,21 @@
         .yelClass {
             background-color: rgb(255, 255, 136);
         }
+
+        .greenBox {
+            width: 200px;
+            height: 50px;
+            border: solid black 1px;
+            background-color: lightgreen;
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
     </style>
 </head>
 
@@ -138,11 +153,46 @@
         <div v-bind:class="[{ impClass: isImportant }, 'yelClass' ]">
             This div tag belongs to one or two classes depending on the isImportant property.
         </div>
+
+        <!-- <form>
+            <p>
+                Important item?
+                <label>
+                    <input type="checkbox" v-model="chbxVal">
+                    {{ chbxVal }}
+                </label>
+            </p>
+        </form> -->
+        <form>
+            <p>
+                Important item?
+                <label>
+                    <input type="checkbox" v-model="chckbx">
+                    {{ importantShow }}
+                </label>
+            </p>
+        </form>
+
+        <input type="range" min="0" max="100" step="1" v-model="rangeVal">
+        <p><code>{{ rangeVal }}</code></p>
+
+        <div class="greenBox" v-on:click="updatePos"></div>
+        <p>{{ xDiff }}</p>
+        <div>
+            <label>
+                <p>Type a valid e-mail address:</p>
+                <input type="email" v-model="inpAddress">
+            </label>
+            <p v-bind:class="myClass"><code>{{ feedbackText }}</code></p>
+        </div>
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const app = Vue.createApp({
+            template:
+                    `<h1>{{ message }}</h1>
+                    <p>This is a second line of HTML code, inside backtick quotes</p>`,
             data() {
                 return {
                     itemName: null,
@@ -185,7 +235,54 @@
                         { url: '/assets/img_rice.svg', sel: false }
                     ],
                     isYellow: true,
-                    isImportant: true
+                    isImportant: true,
+                    chbxVal: false,
+                    chckbx: false,
+                    rangeVal: 70,
+                    xPos: 0,
+                    xDiff: 0,
+                    inpAddress: '',
+                    feedbackText: '',
+                    myClass: 'invalid',
+                    message: "Hello World!"
+                }
+            },
+            computed: {
+                importantShow() {
+                    if (this.chckbx) {
+                        return 'yes'
+                    }
+                    else {
+                        return 'no'
+                    }
+                }
+            },
+            watch: {
+                rangeVal(val) {
+                    if (val > 20 && val < 60) {
+                        if (val < 40) {
+                            this.rangeVal = 20;
+                        }
+                        else {
+                            this.rangeVal = 60;
+                        }
+                    }
+                },
+                xPos(newVal, oldVal) {
+                    this.xDiff = newVal - oldVal
+                },
+                inpAddress(newVal, oldVal) {
+                    if (!newVal.includes('@')) {
+                        this.feedbackText = 'The e-mail address is NOT valid';
+                        this.myClass = 'invalid';
+                    }
+                    else if (!oldVal.includes('@') && newVal.includes('@')) {
+                        this.feedbackText = 'Perfect! You fixed it!';
+                        this.myClass = 'valid'
+                    }
+                    else {
+                        this.feedbackText = 'The e-mail address is valid :)';
+                    }
                 }
             },
             methods: {
@@ -218,6 +315,9 @@
                 },
                 select(number) {
                     this.images[number].sel = !this.images[number].sel
+                },
+                updatePos(evt) {
+                    this.xPos = evt.offsetX
                 }
             }
         })
